@@ -1,0 +1,1 @@
+spark   cpu_ratio:GAUGE:0:U, mem_ratio:GAUGE:0:U, mem_res:GAUGE:0:U

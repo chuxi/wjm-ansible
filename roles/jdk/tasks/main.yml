@@ -1,0 +1,31 @@
+---
+
+- name: upload jdk tar ball by {{ delegated_host }}
+  synchronize: src={{ package_dir }}/jdk-{{ jdk_version }}-linux-x64.tar.gz dest={{ package_dir }}
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname != delegated_host
+
+- name: upload jdk tar ball locally
+  copy: src={{ package_dir }}/jdk-{{ jdk_version }}-linux-x64.tar.gz dest={{ package_dir }}
+  when: not delegation
+
+- name: unarchieve jdk tar ball
+  unarchive: src={{ package_dir }}/jdk-{{ jdk_version }}-linux-x64.tar.gz dest={{ install_dir }} copy=no
+
+# register jdk file name
+- name: get the file name in jdk tar ball
+  shell: tar -tf {{ package_dir }}/jdk-{{ jdk_version }}-linux-x64.tar.gz | head -n 1 | awk -F / '{print $1}'
+  args:
+    warn: no
+  register: jdk_name
+  ignore_errors: True
+
+- debug: msg="{{ jdk_name.stdout }}"
+
+- name: build symlink for jdk
+  file: src={{ install_dir }}/{{ jdk_name.stdout }} dest={{ install_dir }}/java state=link force=yes
+
+- name: add java to the path
+  template: src=profile_java.sh.j2 dest=/etc/profile.d/profile_java.sh
+  become: yes
+  become_method: sudo

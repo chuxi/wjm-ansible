@@ -1,0 +1,20 @@
+# source
+driver.source.jvm.class=org.apache.spark.metrics.source.JvmSource
+executor.source.jvm.class=org.apache.spark.metrics.source.JvmSource
+
+# sink
+driver.sink.influx.class=org.apache.spark.metrics.sink.InfluxSink
+driver.sink.influx.protocol=http
+driver.sink.influx.host={{ groups['influxdb'][0] }}
+driver.sink.influx.port=8086
+driver.sink.influx.period=10
+driver.sink.influx.database=spark
+driver.sink.influx.measurements=BlockManager.memory,BlockManager.disk,jvm.heap,jvm.non-heap,DAGScheduler.stage,DAGScheduler.job
+
+executor.sink.influx.class=org.apache.spark.metrics.sink.InfluxSink
+executor.sink.influx.protocol=http
+executor.sink.influx.host={{ groups['influxdb'][0] }}
+executor.sink.influx.port=8086
+executor.sink.influx.period=10
+executor.sink.influx.database=spark
+executor.sink.influx.measurements=jvm.heap,jvm.non-heap,executor.threadpool,executor.filesystem.file,executor.filesystem.hdfs,windjammer.cache

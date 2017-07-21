@@ -1,0 +1,21 @@
+---
+
+- name: PostgreSQL | Make sure the CA certificates are available
+  yum: name=ca-certificates state=present
+
+- name: PostgreSQL | Add PostgreSQL repository
+  yum: name="{{ postgresql_yum_repository_url }}" state=present
+
+- name: PostgreSQL | Make sure the dependencies are installed
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: ["python-psycopg2", "python-pycurl", "glibc-common"]
+
+- name: PostgreSQL | Install PostgreSQL
+  yum: name={{ item }} state=present
+  with_items:
+    - "postgresql{{ postgresql_version_terse }}-server"
+    - "postgresql{{ postgresql_version_terse }}-contrib"
+

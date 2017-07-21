@@ -1,0 +1,11 @@
+---
+
+postgresql_version: 9.6
+postgresql_version_terse: "{{ postgresql_version | replace('.', '') }}"    # 96
+
+postgresql_yum_repository_url: https://yum.postgresql.org/{{ postgresql_version }}/redhat/rhel-{{ ansible_distribution_major_version }}-x86_64/pgdg-redhat{{ postgresql_version_terse }}-{{ postgresql_version }}-3.noarch.rpm
+
+postgresql_locale: en_US.UTF-8
+postgresql_ctype: en_US.UTF-8
+
+

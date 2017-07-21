@@ -1,0 +1,36 @@
+---
+
+- name: prepare local files
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: key file exists
+      stat: path={{ inventory_dir }}/ssh/id_rsa
+      register: sshkey_stat
+
+    - name: mkdir for tempatory ssh
+      file: path={{ inventory_dir }}/ssh state=directory
+      when: sshkey_stat.stat.exists == False
+
+    - name: generate local ssh key
+      local_action: command ssh-keygen -t rsa -f {{ inventory_dir }}/ssh/id_rsa -P ''
+      when: sshkey_stat.stat.exists == False
+
+    - name: generate authorized_keys
+      local_action: file path={{ inventory_dir }}/ssh/authorized_keys state=touch
+      when: sshkey_stat.stat.exists == False
+
+    - name: prepare authorized_keys
+      local_action: shell cat {{ inventory_dir }}/ssh/id_rsa.pub > {{ inventory_dir }}/ssh/authorized_keys
+      when: sshkey_stat.stat.exists == False
+
+    - name: prepare authorized_keys_append
+      local_action: shell cat {{ inventory_dir }}/ssh/id_rsa.pub >> {{ inventory_dir }}/ssh/authorized_keys_append
+      when: sshkey_stat.stat.exists == False
+
+    - name: prepare authorized_keys_append with current user's pub key
+      local_action: shell cat ~/.ssh/id_rsa.pub >> {{ inventory_dir }}/ssh/authorized_keys_append
+      when: sshkey_stat.stat.exists == False
+
+    - name: ssh-add just generated id_rsa
+      local_action: command ssh-add {{ inventory_dir }}/ssh/id_rsa

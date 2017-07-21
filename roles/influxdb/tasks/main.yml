@@ -1,0 +1,12 @@
+---
+
+- name: install influxdb
+  include: install_influxdb_yum.yml
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - influxdb-install
+
+- name: config influxdb
+  include: config_influxdb.yml
+  tags:
+    - influxdb-config

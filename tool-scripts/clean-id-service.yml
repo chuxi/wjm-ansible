@@ -1,0 +1,19 @@
+---
+
+# 该文件用于存储一些简单的脚本工具，在部署失败或者有问题时能够快速处理
+
+- name: stop id-service data
+  hosts: id-service
+  remote_user: "{{ user }}"
+  tasks:
+    - name: stop id-service
+      command: chdir={{ install_dir }}/id-service bash -lc "./bin/stop.sh"
+
+- name: clean id-service zookeeper
+  hosts: zookeeper
+  remote_user: "{{ user }}"
+  tasks:
+    - name: clean zookeeper id-service
+      command: chdir={{ install_dir }}/zookeeper ./bin/zkCli.sh rmr /userservice
+      run_once: true
+      delegate_to: "{{ groups['zookeeper'][0] }}"

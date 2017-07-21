@@ -1,0 +1,14 @@
+metastore_db
+
+*.log
+*.iml
+.idea
+target
+
+common.conf
+
+*.pyc
+
+*.retry
+
+id_rsa

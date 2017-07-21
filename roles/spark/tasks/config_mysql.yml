@@ -1,0 +1,15 @@
+---
+
+- name: Set the correct delegated_dbhost (to support MySQL db deployment on a remote dbhost)
+  set_fact:
+    delegated_dbhost: "{{db_delegated_host if (db_delegated_host != 'localhost') else inventory_hostname}}"
+
+- name: spark hive mysql create database {{ spark_hive_mysql_database }}
+  mysql_db: name={{ spark_hive_mysql_database }} state=present encoding=utf8
+    login_host={{ db_login_host }} login_password="{{ db_login_password }}" login_user={{ db_login_username }}
+  delegate_to: "{{ delegated_dbhost }}"
+
+- name: add spark hive user priviledges
+  mysql_user: name={{ spark_hive_mysql_username }} host="%" password={{ spark_hive_mysql_password }} priv={{ spark_hive_mysql_database }}.*:ALL state=present
+    login_host={{ db_login_host }} login_password="{{ db_login_password }}" login_user={{ db_login_username }}
+  delegate_to: "{{ delegated_dbhost }}"

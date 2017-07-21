@@ -1,0 +1,39 @@
+---
+
+group: wjm
+user: wjm
+
+install_dir: /home/{{ user }}/svr
+data_dir: /home/{{ user }}/data
+package_dir: /home/{{ user }}/package
+
+delegation: True
+delegated_host: wj-04
+
+
+replace_authorized_keys: False
+disable_root_login: False
+
+common_packages:
+  - vim
+  - git
+  - rsync
+  - gcc
+
+
+# jdk
+jdk_version: 8u131
+
+# maven
+maven_version: 3.5.0
+
+# postgresql
+db_login_username: "{{ user }}"
+db_login_password: 'W1ndJ@mmer'
+db_login_host: "{{ groups['postgres'][0] }}"
+db_login_port: 5432
+
+
+collectd_version: 5.7.2
+
+

@@ -1,0 +1,18 @@
+---
+
+- name: install postgresql for centos
+  include: install_postgresql_yum.yml
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - postgresql-install
+    - postgresql-install-yum
+
+- name: config postgresql
+  include: config_postgresql.yml
+  tags:
+    - postgresql-config
+
+- name: initial postgresql
+  include: initial_postgresql.yml
+  tags:
+    - postgresql-initial

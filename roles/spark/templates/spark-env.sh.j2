@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+JAVA_HOME={{ install_dir }}/java
+HADOOP_CONF_DIR={{ install_dir }}/hadoop/etc/hadoop
+SPARK_LOG_DIR={{ data_dir }}/spark/logs/
+SPARK_SUBMIT_LIBRARY_PATH={{ install_dir }}/hadoop/lib/native:$SPARK_SUBMIT_LIBRARY_PATH
+SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS"
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_CONF_DIR/../../lib/native

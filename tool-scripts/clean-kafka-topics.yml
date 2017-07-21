@@ -1,0 +1,17 @@
+---
+
+- name: kafka initial topics
+  hosts: kafka
+  remote_user: "{{ user }}"
+  tasks:
+    - name: delete topics
+      command: |
+        chdir={{ install_dir }}/kafka
+        bin/kafka-topics.sh --delete --zookeeper {{ groups['zookeeper'][0] }}:2181/kafka
+        --topic {{ item }}
+      with_items: "{{ kafka_topics }}"
+      run_once: true
+      delegate_to: "{{ groups['kafka'][0] }}"
+
+#    - name: stop kafkas
+#      command: chdir={{ install_dir }}/kafka bash -lc "./bin/kafka-server-stop.sh"

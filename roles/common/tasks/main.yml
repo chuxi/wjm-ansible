@@ -1,0 +1,50 @@
+---
+
+#- name: update hostname /etc/sysconfig/network
+#  lineinfile: dest=/etc/sysconfig/network regexp="^HOSTNAME" line=HOSTNAME={{ inventory_hostname }}
+#  when: ansible_os_family == 'RedHat'
+#  tags:
+#    - common-hostname
+#
+#- name: update hostname /etc/hostname
+#  template: src=hostname.j2 dest=/etc/hostname owner={{ user }} group={{ group }} mode=0664
+#  when: ansible_os_family == 'Debian'
+#  tags:
+#    - common-hostname
+#
+#- name: update hostname
+#  hostname: name={{ inventory_hostname }}
+#  tags:
+#    - common-hostname
+
+- name: set timezone as UTC
+  timezone: name='UTC'
+  tags:
+    - common-time
+
+- name: restart ntpd service
+  systemd: state=started name=ntpd
+  tags:
+    - common-time
+
+- name: install common dependencies
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: "{{ common_packages }}"
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common-packages
+
+- name: install common dependencies
+  yum: name={{ item }} state=latest
+  with_items: "{{ common_packages }}"
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - common-packages
+
+- name: create install_dir and data_dir
+  file: dest={{ item }} state=directory recurse=yes
+    owner={{ user }} group={{ group }} mode=0755
+  with_items:
+    - "{{ install_dir }}"
+    - "{{ data_dir }}"
+    - "{{ package_dir }}"

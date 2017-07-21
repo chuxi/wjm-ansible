@@ -1,0 +1,69 @@
+---
+
+- name: Pause - Bootstrapping is about to begin
+  pause: prompt="Are you sure that you want to continue bootstrapping HDFS?" seconds=10
+
+- name: Ensure that journal nodes are running
+  shell: chdir={{ install_dir }}/hadoop ./sbin/hadoop-daemon.sh start journalnode
+  ignore_errors: yes
+  when: inventory_hostname in groups['hadoop-journal']
+
+- name: Format namenode {{ groups['hadoop-master'][0] }}
+  command: bash -lc "./hdfs namenode -format -force"
+  args:
+    creates: "{{ data_dir }}/hadoop/name/current/VERSION"
+    chdir: "{{ install_dir }}/hadoop/bin"
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+- name: Format ZK for zkfc
+  command: bash -lc "./hdfs zkfc -formatZK -force && touch {{ data_dir }}/hadoop/name/.zkFormatted"
+  args:
+    creates: "{{ data_dir }}/hadoop/name/.zkFormatted"
+    chdir: "{{ install_dir }}/hadoop/bin"
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+# 必须先启动 namenode 0
+- name: Start namenode {{ groups['hadoop-master'][0] }}
+  shell: chdir={{ install_dir }}/hadoop ./sbin/hadoop-daemon.sh start namenode
+  ignore_errors: yes
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+- name: Wait for the namenode {{ groups['hadoop-master'][0] }} to come online
+  wait_for: host={{ groups['hadoop-master'][0] }} port=50070
+  when: inventory_hostname in groups['hadoop-master']
+
+- name: Bootstrap the standby namenode ({{ groups['hadoop-master'][1] }})
+  command: bash -lc "./hdfs namenode -bootstrapStandby"
+  args:
+    creates: "{{ data_dir }}/hadoop/name/current/VERSION"
+    chdir: "{{ install_dir }}/hadoop/bin"
+  when: inventory_hostname == groups['hadoop-master'][1]
+
+# 在groups['hadoop-master'][0]执行 start-dfs.sh启动所有脚本
+- name: execute sbin/start-dfs.sh
+  command: bash -lc "./start-dfs.sh"
+  args:
+    chdir: "{{ install_dir }}/hadoop/sbin"
+  ignore_errors: yes
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+# 在groups['hadoop-master'][0]执行 start-yarn.sh启动yarn
+- name: execute sbin/start-yarn.sh
+  command: bash -lc "./start-yarn.sh"
+  args:
+    chdir: "{{ install_dir }}/hadoop/sbin"
+  ignore_errors: yes
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+# 启动standby yarn resourcemanager
+- name: Start resourcemanager {{ groups['hadoop-master'][1] }}
+  shell: chdir={{ install_dir }}/hadoop ./sbin/yarn-daemon.sh start resourcemanager
+  ignore_errors: yes
+  when: inventory_hostname == groups['hadoop-master'][1]
+
+- name: Bootstrapping complete
+  debug: "msg='New namenode can be opened at http://{{ inventory_hostname }}:50070/'"
+  when: inventory_hostname in groups['hadoop-master']
+
+
+

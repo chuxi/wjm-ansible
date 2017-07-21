@@ -1,0 +1,22 @@
+---
+
+- name: install collectd
+  include: install_collectd.yml
+  tags:
+    - collectd-install
+
+- name: config collectd
+  include: config_collectd.yml
+  tags:
+    - collectd-config
+
+- name: restart collectd
+  shell: "{{ item }}"
+  with_items:
+    - ps -ef | grep collectd | grep -v grep | awk '{print $2}' | xargs kill -9
+    - "{{ collectd_prefix }}/sbin/collectd"
+  ignore_errors: yes
+  when: inventory_hostname in groups['collectd-client']
+  tags:
+    - collectd-config
+    - collectd-restart

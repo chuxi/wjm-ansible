@@ -1,0 +1,43 @@
+spark.master                            yarn
+spark.submit.deployMode                 client
+spark.eventLog.enabled                  true
+spark.eventLog.dir                      {{ spark_eventLog_dir }}
+spark.history.fs.logDirectory           {{ spark_eventLog_dir }}
+spark.local.dir			                {{ spark_local_dir }}
+spark.serializer                        org.apache.spark.serializer.KryoSerializer
+
+spark.sql.shuffle.partitions            {{ spark_sql_shuffle_partitions }}
+spark.sql.hive.convertMetastoreParquet  false
+spark.sql.hive.convertMetastoreOrc      false
+spark.sql.ui.retainedExecutions         100
+spark.ui.retainedJobs                   100
+spark.ui.retainedStages                 100
+spark.streaming.stopGracefullyOnShutdown    true
+spark.serializer.objectStreamReset	    80
+spark.eventLog.compress                 true
+spark.sql.warehouse.dir                 /user/hive/warehouse
+
+
+# driver
+spark.driver.memory                     2g
+
+
+# executor
+spark.executor.memory                   4g
+spark.executor.cores                    2
+spark.executor.instances                16
+
+# yarn
+spark.yarn.am.memory                    6G
+spark.yarn.executor.memoryOverhead      2048
+
+spark.sql.inMemoryColumnarStorage.compressed	false
+
+spark.sql.inMemoryColumnarStorage.batchSize     100000
+
+spark.windjammer.tableCache.kvstore             rocksdb
+spark.windjammer.tableCache.kvstore.dataDir     /home/wjm/data/windjammer
+spark.windjammer.tableCache.kvstore.cacheSize	2g
+spark.windjammer.tableCache.sort		false
+
+spark.metrics.namespace			test

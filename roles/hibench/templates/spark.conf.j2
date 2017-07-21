@@ -1,0 +1,54 @@
+# Spark home
+hibench.spark.home      {{ install_dir }}/spark
+
+# Spark master
+#   standalone mode: spark://xxx:7077
+#   YARN mode: yarn-client
+hibench.spark.master        yarn
+spark.submit.deployMode     client
+
+# executor number and cores when running on Yarn
+hibench.yarn.executor.num     32
+hibench.yarn.executor.cores   1
+
+# executor and driver memory in standalone & YARN mode
+spark.executor.memory  4g
+spark.driver.memory    4g
+
+spark.yarn.am.memory    6g
+
+spark.windjammer.reporter.class         com.windjammer.reporters.FileStorageReporter
+spark.windjammer.reporter.store         /tmp/windjammer-monitor
+spark.windjammer.tableCache.kvstore     rocksdb
+spark.windjammer.tableCache.kvstore.dataDir     {{ data_dir }}/windjammer
+# spark.windjammer.io.async               true
+
+# set spark parallelism property according to hibench's parallelism value
+spark.default.parallelism     128
+
+# set spark sql's default shuffle partitions according to hibench's parallelism value
+spark.sql.shuffle.partitions  32
+
+#======================================================
+# Spark Streaming
+#======================================================
+# Spark streaming Batchnterval in millisecond (default 100)
+hibench.streambench.spark.batchInterval          100
+
+# Number of nodes that will receive kafka input (default: 4)
+hibench.streambench.spark.receiverNumber        4
+
+# Indicate RDD storage level. (default: 2)
+# 0 = StorageLevel.MEMORY_ONLY
+# 1 = StorageLevel.MEMORY_AND_DISK_SER
+# other = StorageLevel.MEMORY_AND_DISK_SER_2
+hibench.streambench.spark.storageLevel 2
+
+# indicate whether to test the write ahead log new feature (default: false)
+hibench.streambench.spark.enableWAL false
+
+# if testWAL is true, this path to store stream context in hdfs shall be specified. If false, it can be empty (default: /var/tmp)
+hibench.streambench.spark.checkpointPath /tmp
+
+# whether to use direct approach or not (dafault: true)
+hibench.streambench.spark.useDirectMode true

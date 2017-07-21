@@ -1,0 +1,51 @@
+---
+
+- name: install jdk
+  hosts: all
+  remote_user: "{{ user }}"
+  roles:
+    - jdk
+  tags:
+    - jdk
+
+- name: install hadoop
+  hosts: hadoop
+  remote_user: "{{ user }}"
+  roles:
+    - hadoop
+  tags:
+    - hadoop
+
+- name: install postgres
+  hosts: postgres
+  remote_user: "{{ user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - postgres
+  tags:
+    - postgres
+
+- name: install spark
+  hosts: spark
+  remote_user: "{{ user }}"
+  roles:
+    - spark
+  tags:
+    - spark
+
+- name: install hibench
+  hosts: hibench
+  remote_user: "{{ user }}"
+  roles:
+    - hibench
+  tags:
+    - hibench
+
+- name: install maven
+  hosts: maven
+  remote_user: "{{ user }}"
+  roles:
+    - maven
+  tags:
+    - maven

@@ -1,0 +1,12 @@
+---
+
+- name: install nginx
+  include: install_nginx.yml
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - nginx-install
+
+- name: config nginx
+  include: config_nginx.yml
+  tags:
+    - nginx-config

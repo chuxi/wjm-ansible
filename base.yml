@@ -1,0 +1,57 @@
+---
+
+# 执行这一个base.yml，   --ask-pass
+
+- name: create new ssh user with keys
+  hosts: all
+  remote_user: root
+# 针对已经开启了disable root login的情况，可以使用下面的remote_user
+#  remote_user: "{{ user }}"
+#  become: yes
+#  become_method: sudo
+  tasks:
+    # add user apps
+    - name: Add {{ group }} group
+      group: name={{ group }} state=present
+
+    - name: add {{ user }} user
+      user: name={{ user }} groups={{ group }} shell=/bin/bash createhome=yes append=yes
+
+    - name: Add {{ user }} into /etc/sudoers.d/
+      lineinfile: dest=/etc/sudoers.d/{{ user }} line="{{ user }}    ALL=(ALL) NOPASSWD:ALL"
+        state=present create=yes
+
+    - name: add .ssh for {{ user }}
+      file: path=/home/{{ user }}/.ssh owner={{ user }} group={{ group }} mode=755 state=directory
+
+    - name: upload authorized_keys
+      template: src={{ inventory_dir }}/ssh/authorized_keys
+        dest=/home/{{ user }}/.ssh/authorized_keys owner={{ user }} group={{ group }} mode=0600
+      when: replace_authorized_keys
+
+    - name: update remote authorized_keys
+      blockinfile: block="{{ lookup('file', inventory_dir + '/ssh/authorized_keys_append') }}"
+        dest=/home/{{ user }}/.ssh/authorized_keys
+        backup=yes create=yes owner={{ user }} group={{ group }} mode=0600
+      when: not replace_authorized_keys
+      tags:
+        - add-keys
+
+    - name: upload ssh config
+      lineinfile: dest=/home/{{ user }}/.ssh/config line="ForwardAgent yes" create=yes
+
+    - name: StrictHostKeyChecking no
+      lineinfile: dest=/home/{{ user }}/.ssh/config line="StrictHostKeyChecking no" create=yes
+
+    - name: disable root login
+      lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+#      notify:
+#        - restart ssh
+      when: disable_root_login
+
+#    - name: restart sshd
+#      systemd: name=sshd state=restarted
+
+  handlers:
+    - name: restart ssh
+      systemd: name=sshd state=restarted

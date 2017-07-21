@@ -1,0 +1,11 @@
+---
+
+# 该文件用于存储一些简单的脚本工具，在部署失败或者有问题时能够快速处理
+
+- name: stop hbase service
+  hosts: hbase
+  remote_user: "{{ user }}"
+  tasks:
+    - name: stop hbase service
+      command: chdir={{ install_dir }}/hbase bash -lc "./bin/stop-hbase.sh"
+      when: inventory_hostname == groups['hbase-master'][0]

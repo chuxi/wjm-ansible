@@ -1,0 +1,25 @@
+---
+
+- name: update all hosts
+  hosts: all
+  remote_user: "{{ user }}"
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: update hosts
+      template: src={{ inventory_dir }}/templates/hosts.j2
+        dest=/etc/hosts owner=root group=root mode=0644
+  tags:
+    - update-hosts
+
+- name: build common env
+  hosts: all
+  remote_user: "{{ user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - common
+  tags:
+    - common
+
+

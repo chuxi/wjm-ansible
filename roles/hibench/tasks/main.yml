@@ -1,0 +1,6 @@
+---
+
+- name: config hibench spark
+  include: config_hibench.yml
+  tags:
+    - hibench-config

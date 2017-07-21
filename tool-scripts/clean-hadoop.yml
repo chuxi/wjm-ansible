@@ -1,0 +1,18 @@
+---
+
+# 该文件用于存储一些简单的脚本工具，在部署失败或者有问题时能够快速处理
+
+- name: hadoop
+  hosts: hadoop
+  remote_user: "{{ user }}"
+  tasks:
+    - name: stop all service
+      command: chdir={{ install_dir }}/hadoop bash -lc "./sbin/stop-all.sh"
+      when: inventory_hostname == groups['hadoop-master'][0]
+
+#    - name: stop standby resourcemanager
+#      command: chdir={{ install_dir }}/hadoop bash -lc "./sbin/yarn-daemon.sh stop resourcemanager"
+#      when: inventory_hostname == groups['hadoop-master'][1]
+
+    - name: clean hadoop
+      file: dest={{ data_dir }}/hadoop state=absent

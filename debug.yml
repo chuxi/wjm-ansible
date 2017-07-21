@@ -1,0 +1,37 @@
+---
+
+#- name: set postgresql user {{ odoo_config_db_user }} with password {{ odoo_config_db_passwd }}
+#  hosts: hanwei01
+#  remote_user: "{{ user }}"
+#  become: yes
+#  become_method: sudo
+#  become_user: postgres
+#  tasks:
+#    - name: add user with password
+#      command: psql -h localhost -p 5432 -U postgres -d postgres -c "CREATE USER {{ odoo_config_db_user }} WITH CREATEDB NOCREATEUSER PASSWORD {{ odoo_config_db_passwd }} "
+#      postgresql_user: name={{ odoo_config_db_user }} password={{ odoo_config_db_passwd }}
+#        role_attr_flags=CREATEDB,NOSUPERUSER
+
+#    - name: PostgreSQL - Activate the 'unaccent' extension on databases
+#      postgresql_ext: name=unaccent db=template1
+
+
+- name: install collectd
+  hosts: all
+  remote_user: "{{ user }}"
+  become: true
+  become_user: root
+  roles:
+    - collectd
+  tags:
+    - collectd
+
+- name: install influxdb
+  hosts: influxdb
+  remote_user: "{{ user }}"
+  become: true
+  become_method: sudo
+  roles:
+    - influxdb
+  tags:
+    - influxdb

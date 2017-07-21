@@ -1,0 +1,7 @@
+---
+
+- name: upload influxdb.conf
+  template: src=influxdb.conf.j2 dest=/etc/influxdb/influxdb.conf
+    owner={{ user }} group={{ group }} mode=0664
+  notify:
+    - restart influxdb

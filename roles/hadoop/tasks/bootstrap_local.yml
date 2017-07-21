@@ -1,0 +1,31 @@
+---
+
+- name: Pause - Bootstrapping is about to begin
+  pause: prompt="Are you sure that you want to continue bootstrapping HDFS?" seconds=4
+
+- name: Format namenode {{ groups['hadoop-master'][0] }}
+  command: bash -lc "./hdfs namenode -format -force"
+  args:
+    creates: "{{ data_dir }}/hadoop/name/current/VERSION"
+    chdir: "{{ install_dir }}/hadoop/bin"
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+# 在groups['hadoop-master'][0]执行 start-dfs.sh启动所有脚本
+- name: execute sbin/start-dfs.sh
+  command: bash -lc "./start-dfs.sh"
+  args:
+    chdir: "{{ install_dir }}/hadoop/sbin"
+  ignore_errors: yes
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+# 在groups['hadoop-master'][0]执行 start-yarn.sh启动yarn
+- name: execute sbin/start-yarn.sh
+  command: bash -lc "./start-yarn.sh"
+  args:
+    chdir: "{{ install_dir }}/hadoop/sbin"
+  ignore_errors: yes
+  when: inventory_hostname == groups['hadoop-master'][0]
+
+- name: Bootstrapping complete
+  debug: "msg='New namenode can be opened at http://{{ inventory_hostname }}:50070/'"
+  when: inventory_hostname in groups['hadoop-master']

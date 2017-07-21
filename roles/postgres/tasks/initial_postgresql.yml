@@ -1,0 +1,11 @@
+---
+
+- name: upload sql files
+  template: src={{ item }} dest=/tmp/{{ item | basename | regex_replace('\.j2','') }}
+  with_items:
+    - create_login_users.sql.j2
+
+- name: execute sql files
+  shell: psql -U postgres -d postgres -f /tmp/{{ item }}
+  with_items:
+    - create_login_users.sql

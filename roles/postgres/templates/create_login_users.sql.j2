@@ -1,0 +1,2 @@
+drop user {{ db_login_username }};
+create user {{ db_login_username }} with SUPERUSER CREATEDB password '{{ db_login_password }}';

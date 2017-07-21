@@ -1,0 +1,23 @@
+---
+
+# download from remote url
+#- name: wget nodejs
+#  get_url: url={{ download_hadoop_url }}/hadoop/common/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz
+#    dest={{ install_dir }}
+#  when: download_hadoop_url is defined
+
+- name: upload hadoop tar ball by {{ delegated_host }}
+  synchronize: src={{ package_dir }}/hadoop-{{ hadoop_version }}.tar.gz dest={{ package_dir }}
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname != delegated_host
+
+# use delegated_dir to organize all packages under one directory
+- name: upload hadoop tar ball locally
+  copy: src={{ package_dir }}/hadoop-{{ hadoop_version }}.tar.gz dest={{ package_dir }}
+  when: not delegation
+
+- name: unarchieve hadoop tar ball
+  unarchive: src={{ package_dir }}/hadoop-{{ hadoop_version }}.tar.gz dest={{ install_dir }} copy=no
+
+- name: build symlink for hadoop
+  file: src={{ install_dir }}/hadoop-{{ hadoop_version }} dest={{ install_dir }}/hadoop state=link force=yes

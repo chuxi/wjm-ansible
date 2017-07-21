@@ -1,0 +1,33 @@
+---
+
+- name: install python-psycopg2 on delegated_host
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  become: yes
+  become_method: sudo
+  with_items: ["python-psycopg2"]
+  delegate_to: "{{ delegated_host }}"
+
+- name: setup spark hive database {{ spark_hive_jdbc_database }}
+  postgresql_db: name={{ spark_hive_jdbc_database }} state=present encoding=UTF-8
+    login_host={{ db_login_host }} login_password="{{ db_login_password }}" login_user={{ db_login_username }} port={{ db_login_port }}
+  delegate_to: "{{ delegated_host }}"
+
+- name: add spark hive user priviledges
+  postgresql_user: name={{ spark_hive_jdbc_username }}
+    db={{ spark_hive_jdbc_database }} priv=ALL
+    password="{{ spark_hive_jdbc_password }}" state=present
+    login_host={{ db_login_host }}
+    login_password="{{ db_login_password }}"
+    login_user={{ db_login_username }}
+    port={{ db_login_port }}
+  delegate_to: "{{ delegated_host }}"
+
+- name: execute schema sql
+  shell: chdir={{ package_dir }}
+    psql -h '{{ db_login_host }}' -U '{{ spark_hive_jdbc_username }}' -d '{{ spark_hive_jdbc_database }}' -p {{ db_login_port }} -f ./hive-schema-1.2.0.postgres.sql
+  environment:
+    PGPASSWORD: "{{ spark_hive_jdbc_password }}"
+  delegate_to: "{{ groups['postgres'][0] }}"

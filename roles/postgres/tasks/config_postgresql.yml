@@ -1,0 +1,26 @@
+---
+
+- name: ensure locale is en_US.UTF-8
+  copy: src=locale dest=/etc/default/locale owner=root group=root mode=0644
+
+- name: check whether the postgresql is already installed
+  stat: path=/var/lib/pgsql/{{ postgresql_version }}/data/PG_VERSION
+  when: ansible_os_family == "RedHat"
+  register: pgdata_initialized
+
+- name: initial postgresql database
+  command: /usr/pgsql-{{ postgresql_version }}/bin/postgresql{{ postgresql_version_terse }}-setup initdb
+  when: ansible_os_family == "RedHat" and not pgdata_initialized.stat.exists
+
+- name: update config files
+  template: src={{ item }} dest=/var/lib/pgsql/{{ postgresql_version }}/data/{{ item | basename | regex_replace('\.j2','') }}
+  with_items:
+    - pg_hba.conf.j2
+    - postgresql.conf.j2
+
+- name: PostgreSQL | Enable service
+  service: name=postgresql-{{ postgresql_version }} enabled=yes
+  when: ansible_os_family == "RedHat"
+
+- name: PostgreSQL | Restart PostgreSQL
+  service: name=postgresql-{{ postgresql_version }} state=restarted

@@ -1,0 +1,29 @@
+---
+
+- name: wget nodejs
+  get_url: url=https://nodejs.org/dist/{{ nodejs_version }}/node-{{ nodejs_version }}-linux-x64.tar.xz
+    dest={{ install_dir }}
+
+- name: xz nodejs
+  command: chdir={{ install_dir }} xz -d node-{{ nodejs_version }}-linux-x64.tar.xz
+
+- name: tar nodejs
+  unarchive: src={{ install_dir }}/node-{{ nodejs_version }}-linux-x64.tar
+    dest={{ install_dir }} copy=no
+
+- name: build symlink for nodejs
+  file: src={{ install_dir }}/node-{{ nodejs_version }}-linux-x64
+    dest={{ install_dir }}/nodejs state=link force=yes
+
+- name: add profile_nodejs.sh.j2 to the path
+  template: src=profile_nodejs.sh.j2 dest=/etc/profile.d/profile_nodejs.sh
+  become: yes
+  become_method: sudo
+
+# add to bashrc
+- name: add NODEJS_HOME
+  lineinfile: path=~/.bashrc line={{ item }}
+  with_items:
+    - "NODEJS_HOME={{ install_dir }}/nodejs"
+    - "PATH=$NODEJS_HOME/bin:$PATH"
+

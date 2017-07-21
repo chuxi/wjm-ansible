@@ -1,0 +1,10 @@
+---
+
+# 该文件用于存储一些简单的脚本工具，在部署失败或者有问题时能够快速处理
+
+- name: stop log2kafka data
+  hosts: vds-api
+  remote_user: "{{ user }}"
+  tasks:
+    - name: stop log2kafka
+      command: chdir={{ install_dir }}/log2kafka bash -lc "./bin/stop.sh"

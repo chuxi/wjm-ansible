@@ -1,0 +1,8 @@
+---
+
+- name: restart collectd
+  shell: "{{ item }}"
+  with_items:
+    - ps -ef | grep collectd | grep -v grep | awk '{print $2}' | xargs kill -9
+    - "{{ install_dir }}/collectd/sbin/collectd"
+  when: inventory_hostname in groups['collectd-client']

@@ -1,0 +1,38 @@
+---
+
+- name: mkdir for hadoop
+  file: path={{ item }} state=directory recurse=yes owner={{ user }} group={{ group }}
+  with_items:
+    - "{{ data_dir }}/hadoop/tmp"
+    - "{{ data_dir }}/hadoop/name"
+    - "{{ data_dir }}/hadoop/jn"
+    - "{{ data_dir }}/hadoop/yarn/log"
+  when:
+    - inventory_hostname in groups['hadoop-master']
+    - inventory_hostname in groups['hadoop-slave']
+
+- name: prepare data dir
+  file: path={{ item }} state=directory recurse=yes owner={{ user }} group={{ group }}
+  become: yes
+  become_method: sudo
+  with_items: "{{ hadoop_dfs_datanode_data_dir + hadoop_yarn_nodemanager_local_dirs }}"
+  when: inventory_hostname in groups['hadoop-slave']
+
+- name: upload hdfs config files for hadoop
+  template: src={{ item }} dest={{ install_dir }}/hadoop/etc/hadoop/{{ item | basename | regex_replace('\.j2','') }}
+    owner={{ user }} group={{ group }} mode=0664
+  with_items:
+    - core-site.xml.j2
+    - hadoop-env.sh.j2
+    - hdfs-site.xml.j2
+    - yarn-env.sh.j2
+    - yarn-site.xml.j2
+    - mapred-site.xml.j2
+
+- name: config hadoop master
+  template: src={{ item }} dest={{ install_dir }}/hadoop/etc/hadoop/{{ item | basename | regex_replace('\.j2','') }}
+      owner={{ user }} group={{ group }} mode=0664
+  with_items:
+    - slaves.j2
+    - fair-scheduler.xml.j2
+  when: inventory_hostname in groups['hadoop-master']

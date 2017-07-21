@@ -1,0 +1,21 @@
+---
+
+- name: upload maven tar ball by {{ delegated_host }}
+  synchronize: src={{ package_dir }}/apache-maven-{{ maven_version }}-bin.tar.gz dest={{ package_dir }}
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname != delegated_host
+
+- name: upload maven tar ball locally
+  copy: src={{ package_dir }}/apache-maven-{{ maven_version }}-bin.tar.gz dest={{ package_dir }}
+  when: not delegation
+
+- name: unarchieve maven tar ball
+  unarchive: src={{ package_dir }}/apache-maven-{{ maven_version }}-bin.tar.gz dest={{ install_dir }} copy=no
+
+- name: build symlink for maven
+  file: src={{ install_dir }}/apache-maven-{{ maven_version }} dest={{ install_dir }}/maven state=link force=yes
+
+- name: add maven to the path
+  template: src=profile_maven.sh.j2 dest=/etc/profile.d/profile_maven.sh
+  become: yes
+  become_method: sudo

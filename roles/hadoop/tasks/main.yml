@@ -1,0 +1,17 @@
+---
+
+- name: install hadoop
+  include: install_hadoop.yml
+  tags:
+    - hadoop-install
+
+- name: config hadoop as single node
+  include: config_hadoop.yml
+  tags:
+    - hadoop-config
+
+- name: bootstrap hadoop locally
+  include: bootstrap_local.yml
+  when: hadoop_mode == 'local' and hadoop_bootstrap
+  tags:
+    - hadoop-bootstrap

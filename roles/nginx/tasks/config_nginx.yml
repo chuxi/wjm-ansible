@@ -1,0 +1,8 @@
+---
+
+- name: upload nginx config file
+  template: src={{ item }} dest=/etc/nginx/{{ item | basename | regex_replace('\.j2','') }}
+  with_items:
+    - nginx.conf.j2
+  notify:
+    - reload nginx

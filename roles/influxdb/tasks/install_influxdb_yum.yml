@@ -1,0 +1,7 @@
+---
+
+- name: add influxdb repo
+  copy: src=influxdb.repo dest=/etc/yum.repos.d/influxdb.repo
+
+- name: install influxdb
+  yum: name=influxdb state=latest

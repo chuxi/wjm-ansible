@@ -1,0 +1,13 @@
+---
+
+# 该文件用于存储一些简单的脚本工具，在部署失败或者有问题时能够快速处理
+
+- name: stop zookeeper data
+  hosts: zookeeper
+  remote_user: "{{ user }}"
+  tasks:
+    - name: stop zookeeper
+      command: chdir={{ install_dir }}/zookeeper bash -lc "./bin/zkServer.sh stop"
+
+    - name: clean zookeeper data
+      command: chdir={{ install_dir }}/zookeeper bash -lc "rm -rf {{ data_dir }}/zookeeper"
