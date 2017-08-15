@@ -1,0 +1,6 @@
+CREATE EXTERNAL TABLE uservisits_large (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION 'hdfs://wj-05:9000/HiBench/Scan/large/Input/uservisits';
+CREATE EXTERNAL TABLE uservisits_gigantic (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION 'hdfs://wj-05:9000/HiBench/Scan/gigantic/Input/uservisits';
+CREATE EXTERNAL TABLE uservisits_huge (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION 'hdfs://wj-05:9000/HiBench/Scan/huge/Input/uservisits';
+CREATE EXTERNAL TABLE uservisits_bigdata (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION 'hdfs://wj-05:9000/HiBench/Scan/bigdata/Input/uservisits';
+
+

@@ -16,6 +16,6 @@
   file: src={{ install_dir }}/apache-maven-{{ maven_version }} dest={{ install_dir }}/maven state=link force=yes
 
 - name: add maven to the path
-  template: src=profile_maven.sh.j2 dest=/etc/profile.d/profile_maven.sh
+  template: src=profile_cmake.sh.j2 dest=/etc/profile.d/profile_maven.sh
   become: yes
   become_method: sudo

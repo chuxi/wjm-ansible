@@ -5,3 +5,22 @@
 
 - name: install influxdb
   yum: name=influxdb state=latest
+
+- name: update User in influxdb.service file
+  lineinfile: path=/usr/lib/systemd/system/influxdb.service
+    regexp='^User=' line='User={{ user }}'
+
+- name: update Group in influxdb.service file
+  lineinfile: path=/usr/lib/systemd/system/influxdb.service
+    regexp='^Group=' line='Group={{ group }}'
+
+- name: mkdir for influxdb data
+  file: dest={{ item }} state=directory recurse=yes
+    owner={{ user }} group={{ group }} mode=0755
+  with_items:
+    - "{{ data_dir }}/influxdb"
+
+- name: reload influxdb.service
+  systemd: name=influxdb state=reloaded
+  become: yes
+  become_method: sudo

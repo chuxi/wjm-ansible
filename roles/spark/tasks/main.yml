@@ -13,11 +13,21 @@
     - spark-env.sh.j2
     - spark-defaults.conf.j2
     - hive-site.xml.j2
-#    - metrics.properties.j2
+    - metrics.properties.j2
+    - zs.prop.j2
   tags:
     - spark-config
+    - spark-config-conf
 
 - name: mkdir for spark event log
   command: chdir={{ install_dir }}/hadoop ./bin/hdfs dfs -mkdir -p /spark/eventlog
   tags:
     - spark-config
+
+#- include: config_demo.yml
+#  tags:
+#    - spark-config-demo
+
+- include: config_zetascale.yml
+  tags:
+    - spark-config-zetascale

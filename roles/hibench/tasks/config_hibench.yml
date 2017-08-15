@@ -5,7 +5,3 @@
   with_items:
     - hadoop.conf.j2
     - spark.conf.j2
-
-- name: create data dir
-  file: dest={{ data_dir }}/windjammer state=directory recurse=yes
-    owner={{ user }} group={{ group }} mode=0755

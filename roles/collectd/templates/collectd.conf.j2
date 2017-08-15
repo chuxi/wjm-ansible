@@ -15,8 +15,8 @@ FQDNLookup false
 #BaseDir     "${prefix}/var/lib/collectd"
 #PIDFile     "${prefix}/var/run/collectd.pid"
 #PluginDir   "${exec_prefix}/lib/collectd"
-TypesDB     "/opt/collectd/share/collectd/types.db"
-TypesDB     "/opt/collectd/share/collectd/windjammer.db"
+TypesDB     "{{ install_dir }}/collectd/share/collectd/types.db"
+TypesDB     "{{ install_dir }}/collectd/share/collectd/windjammer.db"
 
 #----------------------------------------------------------------------------#
 # When enabled, plugins are loaded automatically with the default options    #
@@ -59,16 +59,16 @@ TypesDB     "/opt/collectd/share/collectd/windjammer.db"
 # accessed.                                                                  #
 ##############################################################################
 
-LoadPlugin syslog
-#LoadPlugin logfile
+#LoadPlugin syslog
+LoadPlugin logfile
 ##LoadPlugin log_logstash
 
-#<Plugin logfile>
-#	LogLevel info
-#	File STDOUT
-#	Timestamp true
+<Plugin logfile>
+	LogLevel info
+	File "/var/log/collectd.log"
+	Timestamp true
 #	PrintSeverity false
-#</Plugin>
+</Plugin>
 
 #<Plugin log_logstash>
 #	LogLevel info
@@ -505,6 +505,7 @@ ValuesPercentage true
 
 #<Plugin disk>
 #	Disk "/^[hs]d[a-f][0-9]?$/"
+#	Disk "/^nvme[0-9]?n1$/"
 #	IgnoreSelected false
 #	UseBSDName false
 #	UdevNameAttr "DEVNAME"
@@ -764,10 +765,10 @@ ValuesPercentage true
 #</Plugin>
 
 <Plugin network>
-Server "wj-03.localdomain" "25826"
+Server "{{ groups['influxdb'][0] }}" "25826"
 #	# client setup:
-	Server "ff18::efc0:4a42" "25826"
-	<Server "239.192.74.66" "25826">
+	Server "{{ groups['influxdb'][0] }}" "25826"
+	<Server "{{ groups['influxdb'][0] }}" "25826">
 #		SecurityLevel Encrypt
 #		Username "user"
 #		Password "secret"
@@ -994,11 +995,22 @@ Server "wj-03.localdomain" "25826"
 #	LogTraces true
 #	Interactive true
 	Import "spark_stat"
+    Import "collectd_iostat_python"
 
 	<Module spark_stat>
 		Interval 10
 #		Verbose True
 	</Module>
+
+	<Module collectd_iostat_python>
+		Interval 10
+		Verbose False
+		Count 1
+		NiceNames True
+		PluginName iostat
+	</Module>
+
+
 </Plugin>
 
 #<Plugin redis>

@@ -8,19 +8,18 @@ hibench.spark.master        yarn
 spark.submit.deployMode     client
 
 # executor number and cores when running on Yarn
-hibench.yarn.executor.num     32
-hibench.yarn.executor.cores   1
+hibench.yarn.executor.num     2
+hibench.yarn.executor.cores   16
 
 # executor and driver memory in standalone & YARN mode
-spark.executor.memory  4g
-spark.driver.memory    4g
+spark.executor.memory  32g
+spark.driver.memory    2g
 
-spark.yarn.am.memory    6g
+spark.yarn.am.memory    36g
 
-spark.windjammer.reporter.class         com.windjammer.reporters.FileStorageReporter
-spark.windjammer.reporter.store         /tmp/windjammer-monitor
 spark.windjammer.tableCache.kvstore     rocksdb
-spark.windjammer.tableCache.kvstore.dataDir     {{ data_dir }}/windjammer
+spark.windjammer.tableCache.kvstore.dataDir     /data2/windjammer
+
 # spark.windjammer.io.async               true
 
 # set spark parallelism property according to hibench's parallelism value

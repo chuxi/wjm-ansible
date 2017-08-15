@@ -26,6 +26,14 @@
   tags:
     - postgres
 
+- name: install zetascale
+  hosts: zetascale
+  remote_user: "{{ user }}"
+  roles:
+    - zetascale
+  tags:
+    - zetascale
+
 - name: install spark
   hosts: spark
   remote_user: "{{ user }}"
@@ -49,3 +57,11 @@
     - maven
   tags:
     - maven
+
+- name: install cmake
+  hosts: cmake
+  remote_user: "{{ user }}"
+  roles:
+    - cmake
+  tags:
+    - cmake

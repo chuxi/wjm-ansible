@@ -16,22 +16,12 @@
 #      postgresql_ext: name=unaccent db=template1
 
 
-- name: install collectd
-  hosts: all
-  remote_user: "{{ user }}"
-  become: true
-  become_user: root
-  roles:
-    - collectd
-  tags:
-    - collectd
 
-- name: install influxdb
-  hosts: influxdb
+
+- name: install cmake
+  hosts: cmake
   remote_user: "{{ user }}"
-  become: true
-  become_method: sudo
   roles:
-    - influxdb
+    - cmake
   tags:
-    - influxdb
+    - cmake

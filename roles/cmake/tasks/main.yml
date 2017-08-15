@@ -1,0 +1,17 @@
+---
+
+- name: upload cmake tar ball by {{ delegated_host }}
+  synchronize: src={{ package_dir }}/cmake-{{ cmake_version }}-Linux-x86_64.tar.gz dest={{ package_dir }}
+  delegate_to: "{{ delegated_host }}"
+  when: inventory_hostname != delegated_host
+
+- name: unarchieve cmake tar ball
+  unarchive: src={{ package_dir }}/cmake-{{ cmake_version }}-Linux-x86_64.tar.gz dest={{ install_dir }} copy=no
+
+- name: build symlink for cmake
+  file: src={{ install_dir }}/cmake-{{ cmake_version }}-Linux-x86_64 dest={{ install_dir }}/cmake state=link force=yes
+
+- name: add cmake to the path
+  template: src=profile_cmake.sh.j2 dest=/etc/profile.d/profile_cmake.sh
+  become: yes
+  become_method: sudo

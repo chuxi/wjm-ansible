@@ -1,21 +1,21 @@
 ---
 
-#- name: update hostname /etc/sysconfig/network
-#  lineinfile: dest=/etc/sysconfig/network regexp="^HOSTNAME" line=HOSTNAME={{ inventory_hostname }}
-#  when: ansible_os_family == 'RedHat'
-#  tags:
-#    - common-hostname
-#
+- name: update hostname /etc/sysconfig/network
+  lineinfile: dest=/etc/sysconfig/network regexp="^HOSTNAME" line=HOSTNAME={{ inventory_hostname }}
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - common-hostname
+
 #- name: update hostname /etc/hostname
 #  template: src=hostname.j2 dest=/etc/hostname owner={{ user }} group={{ group }} mode=0664
 #  when: ansible_os_family == 'Debian'
 #  tags:
 #    - common-hostname
-#
-#- name: update hostname
-#  hostname: name={{ inventory_hostname }}
-#  tags:
-#    - common-hostname
+
+- name: update hostname
+  hostname: name={{ inventory_hostname }}
+  tags:
+    - common-hostname
 
 - name: set timezone as UTC
   timezone: name='UTC'
@@ -48,3 +48,8 @@
     - "{{ install_dir }}"
     - "{{ data_dir }}"
     - "{{ package_dir }}"
+
+- include: "wjm_disk.yml"
+  when: wjm_disk_format
+  tags:
+    - common-wjm-disk

@@ -1,0 +1,5 @@
+---
+
+- name: upload demo benchmark script
+  copy: src=benchmark.sh dest={{ install_dir }}/spark/benchmark.sh
+    owner={{ user }} group={{ group }} mode=0755

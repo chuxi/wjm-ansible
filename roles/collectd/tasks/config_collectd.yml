@@ -1,7 +1,7 @@
 ---
 
 - name: upload collectd.conf
-  template: src=collectd.conf.j2 dest={{ collectd_prefix }}/etc/collectd.conf
+  template: src=collectd.conf.j2 dest={{ install_dir }}/collectd/etc/collectd.conf
     owner={{ user }} group={{ group }} mode=0664
 
 - name: upload windjammer.db
@@ -11,3 +11,4 @@
   copy: src={{ item }} dest={{ install_dir }}/collectd/lib/collectd/{{ item }}
   with_items:
     - spark_stat.py
+    - collectd_iostat_python.py

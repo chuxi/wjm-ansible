@@ -4,6 +4,7 @@
   yum: name={{ item }} state=latest
   with_items:
     - python-devel
+    - sysstat
   when: ansible_os_family == 'RedHat'
   tags:
     - common-packages
@@ -13,15 +14,11 @@
   delegate_to: "{{ delegated_host }}"
   when: delegation and inventory_hostname != delegated_host
 
-- name: upload collectd tar ball locally
-  copy: src={{ package_dir }}/collectd-{{ collectd_version }}.tar.bz2 dest={{ package_dir }}
-  when: not delegation
-
 - name: unarchieve collectd tar ball
   unarchive: src={{ package_dir }}/collectd-{{ collectd_version }}.tar.bz2 dest={{ install_dir }} copy=no
 
 - name: configure and make install
   command: chdir={{ install_dir }}/collectd-{{ collectd_version }} {{ item }}
   with_items:
-    - ./configure --prefix={{ install_dir }}
+    - ./configure --prefix={{ install_dir }}/collectd
     - make install

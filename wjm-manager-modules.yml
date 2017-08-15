@@ -1,0 +1,32 @@
+---
+
+- name: install collectd
+  hosts: collectd
+  remote_user: "{{ user }}"
+  become: true
+  become_user: root
+  roles:
+    - collectd
+  tags:
+    - collectd
+
+- name: install influxdb
+  hosts: influxdb
+  remote_user: "{{ user }}"
+  become: true
+  become_method: sudo
+  roles:
+    - influxdb
+  tags:
+    - influxdb
+
+- name: install grafana
+  hosts: grafana
+  remote_user: "{{ user }}"
+  become: true
+  become_method: sudo
+  roles:
+    - grafana
+  tags:
+    - grafana
+

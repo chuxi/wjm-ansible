@@ -1,0 +1,8 @@
+---
+
+- name: config spark zetascale
+  template: src={{ item }} dest={{ install_dir }}/spark/conf/{{ item | basename | regex_replace('\.j2','') }}
+  with_items:
+    - zs.prop.j2
+  tags:
+    - spark-config

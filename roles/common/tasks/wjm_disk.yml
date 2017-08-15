@@ -1,0 +1,46 @@
+---
+
+- name: update data dir for mount
+  file: dest={{ item }} state=directory recurse=yes
+    owner={{ user }} group={{ group }} mode=0755
+  with_items:
+    - /data1
+    - /data2
+
+- name: unmount /dev/nvme1n1
+  command: umount /dev/nvme1n1
+  ignore_errors: yes
+
+- name: read device information (always use unit when probing)
+  parted: device=/dev/nvme1n1 unit=MiB
+  register: nvme_info
+
+- debug: msg="{{ nvme_info }}"
+
+- name: remove all partitions from disk
+  parted:
+    device: /dev/nvme1n1
+    number: "{{ item.num }}"
+    state: absent
+  with_items:
+   - "{{ nvme_info.partitions }}"
+
+- name: create a new primary partition
+  parted:
+    device: /dev/nvme1n1
+    number: 1
+    label: gpt
+    name: nvme1n1
+    state: present
+
+- name: format the partition
+  filesystem: fstype=ext4 dev=/dev/nvme1n1p1
+
+- name: update /etc/fstab to mount new device partition
+  lineinfile: path=/etc/fstab line="/dev/nvme1n1p1\t /data2\t ext4\t defaults\t 1\t 2"
+
+- name: mount all
+  command: mount -a
+  args:
+    warn: no
+

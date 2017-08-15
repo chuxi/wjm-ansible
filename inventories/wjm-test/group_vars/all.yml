@@ -7,9 +7,10 @@ install_dir: /home/{{ user }}/svr
 data_dir: /home/{{ user }}/data
 package_dir: /home/{{ user }}/package
 
-delegation: True
-delegated_host: wj-04
+wjm_disk_format: False
 
+delegation: True
+delegated_host: wj-06
 
 replace_authorized_keys: False
 disable_root_login: False
@@ -19,6 +20,7 @@ common_packages:
   - git
   - rsync
   - gcc
+  - gcc-c++
 
 
 # jdk
@@ -26,6 +28,9 @@ jdk_version: 8u131
 
 # maven
 maven_version: 3.5.0
+
+# cmake
+cmake_version: 3.9.0
 
 # postgresql
 db_login_username: "{{ user }}"
@@ -36,4 +41,5 @@ db_login_port: 5432
 
 collectd_version: 5.7.2
 
-
+# grafana
+grafana_rpm_url: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.4.3-1.x86_64.rpm

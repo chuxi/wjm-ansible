@@ -1,0 +1,37 @@
+---
+
+- name: install c dependency library
+  yum: name={{ item }} state=latest
+  with_items:
+    - snappy-devel
+    - libaio-devel
+    - libevent-devel
+    - glibc-devel
+  when: ansible_os_family == 'RedHat'
+
+- name: copy libzs.so from {{ delegated_host }}
+  synchronize: src={{ package_dir }}/{{ item }} dest=/usr/local/lib/{{ item }}
+  with_items:
+    - libzs.so
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname != delegated_host
+
+- name: copy libzs.so from local
+  command: cp {{ package_dir }}/{{ item }} /usr/local/lib/{{ item }}
+  when: delegation and inventory_hostname == delegated_host
+  delegate_to: "{{ delegated_host }}"
+  with_items:
+    - libzs.so
+
+- name: copy lz4 from {{ delegated_host }}
+  synchronize: src={{ package_dir }}/{{ item }} dest={{ package_dir }}
+  with_items:
+    - lz4-r131-1.el7.x86_64.rpm
+  delegate_to: "{{ delegated_host }}"
+  when: inventory_hostname != delegated_host
+
+- name: install lz4
+  yum: name={{ package_dir }}/lz4-r131-1.el7.x86_64.rpm state=present
+
+- name: ldconfig libzs.so
+  command: ldconfig

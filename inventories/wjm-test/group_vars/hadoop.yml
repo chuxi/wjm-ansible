@@ -6,15 +6,13 @@ hadoop_version: 2.7.3
 
 hadoop_mode: local
 
-hadoop_dfs_datanode_data_dir: [ "{{ data_dir }}/hadoop/dfs" ]
+hadoop_dfs_datanode_data_dir: [ "/data1/hadoop/dfs" ]
 hadoop_dfs_replication: 1
 hadoop_dfs_blocksize: 268435456
 
-
-
-hadoop_yarn_nodemanager_local_dirs: [ "{{ data_dir }}/hadoop/yarn" ]
+hadoop_yarn_nodemanager_local_dirs: [ "/data1/hadoop/yarn" ]
 # only be true the first time
 hadoop_bootstrap: True
 
-hadoop_yarn_nodemanager_resource_memory_mb: 1024000   # < max_memory * 0.8
+hadoop_yarn_nodemanager_resource_memory_mb: 102400   # < max_memory * 0.8
 hadoop_yarn_nodemanager_resource_cpu_vcores: 20   # 实际的cpu core thread - 4

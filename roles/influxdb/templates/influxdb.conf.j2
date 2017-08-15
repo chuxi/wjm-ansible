@@ -25,7 +25,7 @@
 
 [meta]
   # Where the metadata/raft database is stored
-  dir = "/var/lib/influxdb/meta"
+  dir = "{{ data_dir }}/influxdb/meta"
 
   # Automatically create a default retention policy when creating a database.
   # retention-autocreate = true
@@ -44,10 +44,10 @@
 
 [data]
   # The directory where the TSM storage engine stores TSM files.
-  dir = "/var/lib/influxdb/data"
+  dir = "{{ data_dir }}/influxdb/data"
 
   # The directory where the TSM storage engine stores WAL files.
-  wal-dir = "/var/lib/influxdb/wal"
+  wal-dir = "{{ data_dir }}/influxdb/wal"
 
   # Trace logging provides more verbose output around the tsm engine. Turning
   # this on can provide more useful output for debugging tsm engine issues.
@@ -250,7 +250,7 @@
   # unix-socket-enabled = false
 
   # The path of the unix domain socket.
-  # bind-socket = "/var/run/influxdb.sock"
+  bind-socket = "{{ data_dir }}/influxdb/influxdb.sock"
 
 ###
 ### [subscriber]

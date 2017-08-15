@@ -14,9 +14,9 @@
   shell: "{{ item }}"
   with_items:
     - ps -ef | grep collectd | grep -v grep | awk '{print $2}' | xargs kill -9
-    - "{{ collectd_prefix }}/sbin/collectd"
+    - "{{ install_dir }}/collectd/sbin/collectd"
   ignore_errors: yes
-  when: inventory_hostname in groups['collectd-client']
+  when: inventory_hostname in groups['collectd']
   tags:
     - collectd-config
     - collectd-restart
