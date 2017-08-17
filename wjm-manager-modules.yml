@@ -3,7 +3,7 @@
 - name: install collectd
   hosts: collectd
   remote_user: "{{ user }}"
-  become: true
+  become: yes
   become_user: root
   roles:
     - collectd

@@ -16,6 +16,6 @@ spark_hive_jdbc_password: "{{ db_login_password }}"
 spark_hive_jdbc_url: jdbc:postgresql://{{ db_login_host }}:{{ db_login_port }}/{{ spark_hive_jdbc_database }}
 
 # zetascale
-spark_zetascale_flash_filename: /data2/windjammer
+spark_zetascale_flash_filename: /data2/zetsacale
 spark_zetascale_flash_size: 1000
 spark_zetascale_cache_size: 4294967296

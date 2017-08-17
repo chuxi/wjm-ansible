@@ -1,7 +1,7 @@
 ---
 
 - name: install jdk
-  hosts: all
+  hosts: jdk
   remote_user: "{{ user }}"
   roles:
     - jdk

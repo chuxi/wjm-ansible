@@ -29,7 +29,7 @@ class Spark():
     def _grep_executor_info(self):
         executors = {}
         try:
-            cmd = "jps -m | grep CoarseGrainedExecutorBackend"
+            cmd = "/home/wjm/svr/java/bin/jps -m | grep CoarseGrainedExecutorBackend"
             output = subprocess.check_output(cmd, shell=True)
             lines = output.split('\n')
             for line in lines:

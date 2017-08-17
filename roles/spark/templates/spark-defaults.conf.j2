@@ -26,9 +26,10 @@ spark.driver.memory                     2g
 spark.executor.memory                   32g
 spark.executor.cores                    16
 spark.executor.instances                2
+spark.executor.extraLibraryPath		    {{ install_dir }}/native
 
 # yarn
-spark.yarn.am.memory                    36G
+spark.yarn.am.memory                    4G
 spark.yarn.executor.memoryOverhead      33000
 
 spark.sql.inMemoryColumnarStorage.compressed	false

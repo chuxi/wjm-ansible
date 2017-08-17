@@ -9,15 +9,21 @@
     - glibc-devel
   when: ansible_os_family == 'RedHat'
 
+- name: mkdir -p {{ install_dir }}/native
+  file: dest={{ item }} state=directory recurse=yes
+    owner={{ user }} group={{ group }} mode=0755
+  with_items:
+    - "{{ install_dir }}/native"
+
 - name: copy libzs.so from {{ delegated_host }}
-  synchronize: src={{ package_dir }}/{{ item }} dest=/usr/local/lib/{{ item }}
+  synchronize: src={{ package_dir }}/{{ item }} dest={{ install_dir }}/native/{{ item }}
   with_items:
     - libzs.so
   delegate_to: "{{ delegated_host }}"
   when: delegation and inventory_hostname != delegated_host
 
 - name: copy libzs.so from local
-  command: cp {{ package_dir }}/{{ item }} /usr/local/lib/{{ item }}
+  command: cp {{ package_dir }}/{{ item }} {{ install_dir }}/native/{{ item }}
   when: delegation and inventory_hostname == delegated_host
   delegate_to: "{{ delegated_host }}"
   with_items:
@@ -33,5 +39,5 @@
 - name: install lz4
   yum: name={{ package_dir }}/lz4-r131-1.el7.x86_64.rpm state=present
 
-- name: ldconfig libzs.so
-  command: ldconfig
+#- name: ldconfig libzs.so
+#  command: ldconfig

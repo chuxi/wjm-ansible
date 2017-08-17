@@ -998,6 +998,7 @@ Server "{{ groups['influxdb'][0] }}" "25826"
     Import "collectd_iostat_python"
 
 	<Module spark_stat>
+	# change the jps absolute env path before you use this module
 		Interval 10
 #		Verbose True
 	</Module>
@@ -1005,7 +1006,6 @@ Server "{{ groups['influxdb'][0] }}" "25826"
 	<Module collectd_iostat_python>
 		Interval 10
 		Verbose False
-		Count 1
 		NiceNames True
 		PluginName iostat
 	</Module>
