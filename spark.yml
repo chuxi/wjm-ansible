@@ -1,0 +1,17 @@
+---
+
+- name: install spark
+  hosts: spark
+  remote_user: "{{ user }}"
+  roles:
+    - spark
+  tags:
+    - spark
+
+- name: install zeppelin
+  hosts: spark
+  remote_user: "{{ user }}"
+  roles:
+    - zeppelin
+  tags:
+    - zeppelin

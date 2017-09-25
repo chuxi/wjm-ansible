@@ -1,0 +1,7 @@
+---
+
+- name: config zeppelin
+  template: src={{ item }} dest={{ install_dir }}/zeppelin/conf/{{ item | basename | regex_replace('\.j2','') }}
+  with_items:
+    - zeppelin-env.sh.j2
+    - zeppelin-site.xml.j2

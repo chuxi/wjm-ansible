@@ -1,0 +1,16 @@
+---
+
+- name: upload zeppelin tar ball by {{ delegated_host }}
+  synchronize: src={{ package_dir }}/{{ zeppelin_name }}.tgz dest={{ package_dir }}
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname != delegated_host
+
+- name: upload zeppelin tar ball locally
+  copy: src={{ package_dir }}/{{ zeppelin_name }}.tgz dest={{ package_dir }}
+  when: not delegation
+
+- name: unarchive the zeppelin dir
+  unarchive: src={{ package_dir }}/{{ zeppelin_name }}.tgz dest={{ install_dir }} copy=no
+
+- name: build symlink for zeppelin
+  file: src={{ install_dir }}/{{ zeppelin_name }} dest={{ install_dir }}/zeppelin state=link force=yes

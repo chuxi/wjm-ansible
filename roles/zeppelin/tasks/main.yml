@@ -1,0 +1,7 @@
+---
+
+- include: install_zeppelin.yml
+
+- include: config_zeppelin.yml
+  tags:
+    - zeppelin-config
