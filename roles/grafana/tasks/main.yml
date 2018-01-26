@@ -11,7 +11,7 @@
   when: delegation and inventory_hostname != delegated_host
 
 - name: update grafana.db from local
-  shell: cp {{ package_dir }}/{{ item }} /var/lib/grafana/{{ item }} && chown -R grafana:grafana {{ item }}
+  shell: cp {{ package_dir }}/{{ item }} /var/lib/grafana/{{ item }} && cd /var/lib/grafana && chown -R grafana:grafana {{ item }}
   when: delegation and inventory_hostname == delegated_host
   delegate_to: "{{ delegated_host }}"
   with_items:

@@ -6,11 +6,11 @@
   tags:
     - common-hostname
 
-#- name: update hostname /etc/hostname
-#  template: src=hostname.j2 dest=/etc/hostname owner={{ user }} group={{ group }} mode=0664
-#  when: ansible_os_family == 'Debian'
-#  tags:
-#    - common-hostname
+- name: update hostname /etc/hostname
+  template: src=hostname.j2 dest=/etc/hostname owner={{ user }} group={{ group }} mode=0664
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common-hostname
 
 - name: update hostname
   hostname: name={{ inventory_hostname }}
@@ -22,24 +22,25 @@
   tags:
     - common-time
 
-- name: restart ntpd service
-  systemd: state=started name=ntpd
-  tags:
-    - common-time
-
 - name: install common dependencies
   apt: pkg={{ item }} state=installed update_cache=yes
-  with_items: "{{ common_packages }}"
+  with_items: "{{ debian_common_packages }}"
   when: ansible_os_family == 'Debian'
   tags:
     - common-packages
 
 - name: install common dependencies
   yum: name={{ item }} state=latest
-  with_items: "{{ common_packages }}"
+  with_items: "{{ redhat_common_packages }}"
   when: ansible_os_family == 'RedHat'
   tags:
     - common-packages
+
+- name: restart ntpd service
+  systemd: state=started name=ntpd
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - common-time
 
 - name: create install_dir and data_dir
   file: dest={{ item }} state=directory recurse=yes

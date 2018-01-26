@@ -10,18 +10,25 @@ package_dir: /home/{{ user }}/package
 wjm_disk_format: False
 
 delegation: True
-delegated_host: wj-06
+delegated_host: wj-05
 
 replace_authorized_keys: False
-disable_root_login: False
+disable_root_login: True
 
-common_packages:
+debian_common_packages:
+  - vim
+  - git
+  - rsync
+  - gcc
+  - g++
+  - ntp
+
+redhat_common_packages:
   - vim
   - git
   - rsync
   - gcc
   - gcc-c++
-
 
 # jdk
 jdk_version: 8u131
@@ -42,7 +49,7 @@ db_login_port: 5432
 collectd_version: 5.7.2
 
 # grafana
-grafana_rpm_url: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.4.3-1.x86_64.rpm
+grafana_rpm_url: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.6.3-1.x86_64.rpm
 
 # zeppelin
 zeppelin_name: zeppelin-0.7.2-bin-all

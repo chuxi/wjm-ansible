@@ -3,7 +3,7 @@
 # 执行这一个base.yml，   --ask-pass
 
 - name: create new ssh user with keys
-  hosts: all
+  hosts: other
   remote_user: root
 # 针对已经开启了disable root login的情况，可以使用下面的remote_user
 #  remote_user: "{{ user }}"
@@ -45,8 +45,8 @@
 
     - name: disable root login
       lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
-#      notify:
-#        - restart ssh
+      notify:
+        - restart ssh
       when: disable_root_login
 
 #    - name: restart sshd

@@ -1,7 +1,7 @@
 ---
 
 - name: update all hosts
-  hosts: all
+  hosts: other
   remote_user: "{{ user }}"
   become: yes
   become_method: sudo
@@ -13,7 +13,7 @@
     - update-hosts
 
 - name: build common env
-  hosts: all
+  hosts: other
   remote_user: "{{ user }}"
   become: yes
   become_method: sudo
