@@ -7,10 +7,11 @@ install_dir: /home/{{ user }}/svr
 data_dir: /home/{{ user }}/data
 package_dir: /home/{{ user }}/package
 
-wjm_disk_format: False
+ovh_disk_format: False
+aliyun_disk_format: False
 
 delegation: True
-delegated_host: wj-05
+delegated_host: wj-01
 
 replace_authorized_keys: False
 disable_root_login: True
@@ -29,6 +30,7 @@ redhat_common_packages:
   - rsync
   - gcc
   - gcc-c++
+  - lbzip2
 
 # jdk
 jdk_version: 8u131

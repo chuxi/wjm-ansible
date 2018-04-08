@@ -15,3 +15,11 @@
     - zeppelin
   tags:
     - zeppelin
+
+- name: install notebook
+  hosts: notebook
+  remote_user: "{{ user }}"
+  roles:
+    - notebook
+  tags:
+    - notebook

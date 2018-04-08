@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+bin=`dirname ${0}`
+bin=`cd ${bin}; pwd`
+basedir=${bin}/..
+LIB_DIR=${basedir}/lib
+JARS_DIR=${basedir}/jars
+LOG_DIR=${basedir}/logs
+CONF_DIR=${basedir}/conf
+RUN_DIR=${basedir}/run
+NATIVE_OPTS="-Djava.library.path=${basedir}/native"
+cd ${basedir}
+
+version=0.5.0
+
+export SPARK_HOME={{ spark_home }}
+export SPARK_SUBMIT_LIBRARY_PATH=${basedir}/native:$SPARK_SUBMIT_LIBRARY_PATH
+
+if [ ! -d ${LOG_DIR} ]; then
+  mkdir -p ${LOG_DIR}
+fi
+if [ ! -d ${RUN_DIR} ]; then
+  mkdir -p ${RUN_DIR}
+fi
+
+${SPARK_HOME}/bin/spark-submit \
+  --conf spark.app.name=notebook \
+  --conf spark.pyspark.python=python3 \
+  --conf spark.executor.memoryOverhead=16768 \
+  --conf spark.sql.shuffle.partitions=64 \
+  --conf spark.metrics.namespace=notebook \
+  --driver-class-path ${CONF_DIR}:${JARS_DIR}/* \
+  --master yarn \
+  --deploy-mode client \
+  --num-executors {{ spark_num_executors }} \
+  --executor-cores {{ spark_executor_cores }} \
+  --driver-memory {{ spark_driver_memory }} \
+  --executor-memory {{ spark_executor_memory }} \
+  --class com.windjammer.notebook.Server \
+  ${JARS_DIR}/server-${version}.jar app-cluster $@ \
+  > ${LOG_DIR}/notebook.log 2>&1 &
+
+echo $! > ${RUN_DIR}/pid
+

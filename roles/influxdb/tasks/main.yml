@@ -10,3 +10,9 @@
   include: config_influxdb.yml
   tags:
     - influxdb-config
+
+- name: make sure influxd is started
+  systemd: name=influxdb state=started
+
+- name: execute influx command
+  shell: influx -execute 'create database spark'

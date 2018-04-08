@@ -27,8 +27,9 @@
     - spark-install-dependency
 
 - name: copy dependency jars from local
-  copy: src={{ package_dir }}/{{ item }} dest={{ install_dir }}/spark/jars
-  when: not delegation
+  command: cp {{ package_dir }}/{{ item }} {{ install_dir }}/spark/jars
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname == delegated_host
   with_items:
     - postgresql-9.4.1212.jar
     - spark-influx-sink-0.0.1-SNAPSHOT.jar

@@ -12,7 +12,7 @@ hadoop_dfs_blocksize: 268435456
 
 hadoop_yarn_nodemanager_local_dirs: [ "/data1/hadoop/yarn" ]
 # only be true the first time
-hadoop_bootstrap: True
+hadoop_bootstrap: False
 
-hadoop_yarn_nodemanager_resource_memory_mb: 102400   # < max_memory * 0.8
-hadoop_yarn_nodemanager_resource_cpu_vcores: 20   # 实际的cpu core thread - 4
+hadoop_yarn_nodemanager_resource_memory_mb: 30000   # < max_memory * 0.8
+hadoop_yarn_nodemanager_resource_cpu_vcores: 8   # 实际的cpu core thread - 4

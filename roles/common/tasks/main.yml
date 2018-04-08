@@ -50,7 +50,13 @@
     - "{{ data_dir }}"
     - "{{ package_dir }}"
 
-- include: "wjm_disk.yml"
-  when: wjm_disk_format
+- include: "ovh_disk.yml"
+  when: ovh_disk_format
   tags:
-    - common-wjm-disk
+    - common-ovh-disk
+
+- include: "aliyun_disk.yml"
+  when: aliyun_disk_format
+  tags:
+    - common-aliyun-disk
+

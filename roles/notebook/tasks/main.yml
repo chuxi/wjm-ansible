@@ -1,0 +1,9 @@
+---
+
+- include: install-notebook.yml
+  tags:
+    - notebook-install
+
+- include: config-notebook.yml
+  tags:
+    - notebook-config

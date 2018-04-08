@@ -1,0 +1,17 @@
+---
+
+- name: upload config files for notebook
+  template: src={{ item }} dest={{ install_dir }}/notebook/conf/{{ item | basename | regex_replace('\.j2','') }}
+    owner={{ user }} group={{ group }} mode=0664
+  with_items:
+    - common.conf.j2
+
+- name: upload start-server.sh file for notebook
+  template: src={{ item }} dest={{ install_dir }}/notebook/bin/{{ item | basename | regex_replace('\.j2','') }}
+    owner={{ user }} group={{ group }} mode=0755
+  with_items:
+    - start-server.sh.j2
+
+- name: setup database notebook
+  shell: psql -U {{ database_user }} -d postgres -c 'create database notebook'
+  ignore_errors: yes

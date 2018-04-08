@@ -27,7 +27,7 @@
 #- include: config_demo.yml
 #  tags:
 #    - spark-config-demo
-
-- include: config_zetascale.yml
-  tags:
-    - spark-config-zetascale
+#
+#- include: config_zetascale.yml
+#  tags:
+#    - spark-config-zetascale

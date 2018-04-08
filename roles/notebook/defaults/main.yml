@@ -1,0 +1,20 @@
+---
+
+notebook_version: 0.5.0
+
+
+## spark
+spark_home: /home/wjm/svr/spark
+spark_num_executors: 1
+spark_executor_cores: 4
+spark_driver_memory: 2g
+spark_executor_memory: 8g
+
+
+## database
+database_url: jdbc:postgresql://{{ db_login_host }}:5432/notebook
+database_user: "{{ db_login_username }}"
+database_password: "{{ db_login_password }}"
+
+## install python3
+support_python3: False
