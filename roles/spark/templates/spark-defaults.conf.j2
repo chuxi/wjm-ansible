@@ -26,18 +26,18 @@ spark.driver.memory                     2g
 spark.executor.memory                   16g
 spark.executor.cores                    4
 spark.executor.instances                1
+spark.executor.memoryOverhead           8000
 
 # yarn
 spark.yarn.am.memory                    4G
-spark.executor.memoryOverhead      8000
 
 spark.sql.inMemoryColumnarStorage.compressed	false
 
 spark.sql.inMemoryColumnarStorage.batchSize     100000
 
-#spark.windjammer.kvstore             rocksdb
-#spark.windjammer.kvstore.dataDir     /data1/windjammer
-#spark.windjammer.kvstore.cacheSize	4g
+#spark.windjammer.kvstore               rocksdb
+#spark.windjammer.kvstore.dataDir       /data/windjammer
+#spark.windjammer.kvstore.cacheSize	    4g
 #spark.windjammer.sort		false
 
 spark.metrics.namespace			test

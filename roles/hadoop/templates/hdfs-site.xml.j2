@@ -168,4 +168,24 @@
 
 {% endif %}
 
+{% if hadoop_drop_cache == True %}
+<property>
+    <name>dfs.datanode.drop.cache.behind.reads</name>
+    <value>true</value>
+</property>
+<property>
+    <name>dfs.datanode.drop.cache.behind.writes</name>
+    <value>true</value>
+</property>
+<property>
+    <name>dfs.client.cache.drop.behind.reads</name>
+    <value>true</value>
+</property>
+<property>
+    <name>dfs.client.cache.drop.behind.reads</name>
+    <value>true</value>
+</property>
+
+{% endif %}
+
 </configuration>

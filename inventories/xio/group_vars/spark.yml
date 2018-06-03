@@ -1,0 +1,18 @@
+---
+
+# spark
+spark_name: spark-2.3.0-bin-2.7.3
+spark_eventLog_dir: "{% if hadoop_mode == 'local' %}hdfs://{{ groups['hadoop-master'][0] }}:9000{% else %}hdfs://windjammerFS{% endif %}/spark/eventlog"
+spark_local_dir: "{{ data_dir }}/spark/temp"
+spark_sql_shuffle_partitions: 32
+
+# hive-site.xml
+spark_init_hive_jdbc: True
+#spark_init_hive_jdbc: False
+spark_hive_jdbc_driver: org.postgresql.Driver
+spark_hive_jdbc_database: hive
+spark_hive_jdbc_username: hive
+spark_hive_jdbc_password: "{{ db_login_password }}"
+spark_hive_jdbc_url: jdbc:postgresql://{{ db_login_host }}:{{ db_login_port }}/{{ spark_hive_jdbc_database }}
+
+# zetascale

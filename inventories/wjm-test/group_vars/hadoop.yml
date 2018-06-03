@@ -5,6 +5,7 @@ hadoop_version: 2.7.3
 #download_hadoop_url: http://www-us.apache.org/dist
 
 hadoop_mode: local
+hadoop_drop_cache: True
 
 hadoop_dfs_datanode_data_dir: [ "/data1/hadoop/dfs" ]
 hadoop_dfs_replication: 1

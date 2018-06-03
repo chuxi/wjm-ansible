@@ -56,7 +56,7 @@
  
 <property>
   <name>yarn.resourcemanager.webapp.address.rm1</name>
-  <value>{{ groups['hadoop-master'][0] }}:8088</value>
+  <value>{{ groups['hadoop-master'][0] }}:8188</value>
 </property>
  
 <property>
@@ -87,7 +87,7 @@
  
 <property>
   <name>yarn.resourcemanager.webapp.address.rm2</name>
-  <value>{{ groups['hadoop-master'][1] }}:8088</value>
+  <value>{{ groups['hadoop-master'][1] }}:8188</value>
 </property>
  
 <property>
@@ -115,6 +115,16 @@
 <property>
   <name>yarn.resourcemanager.hostname</name>
   <value>{{ groups['hadoop-master'][0] }}</value>
+</property>
+
+<property>
+  <name>yarn.resourcemanager.webapp.address</name>
+  <value>{{ groups['hadoop-master'][1] }}:8188</value>
+</property>
+
+<property>
+  <name>yarn.resourcemanager.webapp.https.address</name>
+  <value>{{ groups['hadoop-master'][1] }}:8188</value>
 </property>
 
 {% endif %}

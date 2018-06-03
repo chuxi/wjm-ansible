@@ -14,7 +14,7 @@
     - spark-defaults.conf.j2
     - hive-site.xml.j2
     - metrics.properties.j2
-    - zs.prop.j2
+#    - zs.prop.j2
   tags:
     - spark-config
     - spark-config-conf

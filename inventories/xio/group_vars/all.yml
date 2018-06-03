@@ -11,10 +11,10 @@ ovh_disk_format: False
 aliyun_disk_format: False
 
 delegation: False
-delegated_host: wj-05
+delegated_host: wj-01
 
 replace_authorized_keys: False
-disable_root_login: True
+disable_root_login: False
 
 debian_common_packages:
   - vim
@@ -31,6 +31,7 @@ redhat_common_packages:
   - gcc
   - gcc-c++
   - lbzip2
+  - ntp
 
 # jdk
 jdk_version: 8u131

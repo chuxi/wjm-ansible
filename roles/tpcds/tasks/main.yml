@@ -1,0 +1,27 @@
+---
+
+- name: install common dependencies
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: ['gcc', 'make', 'flex', 'bison', 'byacc', 'git']
+  become: yes
+  become_method: sudo
+  when: ansible_os_family == 'Debian'
+
+- name: install common dependencies
+  yum: name={{ item }} state=latest
+  with_items: ['gcc', 'make', 'flex', 'bison', 'byacc', 'git']
+  become: yes
+  become_method: sudo
+  when: ansible_os_family == 'RedHat'
+
+- name: git clone tpcds
+  git:
+    repo: 'https://github.com/databricks/tpcds-kit.git'
+    dest: "{{ install_dir }}/tpcds-kit"
+
+- name: make tpcds
+  make: chdir={{ install_dir }}/tpcds-kit/tools params=dict(OS='LINUX')
+
+- include: config-notebook.yml
+  tags:
+    - tpcds-config-notebook

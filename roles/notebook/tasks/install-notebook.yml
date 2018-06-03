@@ -3,7 +3,7 @@
 - name: upload notebook tar ball by {{ delegated_host }}
   synchronize: src={{ package_dir }}/notebook-{{ notebook_version }}-bin.tar.gz dest={{ package_dir }}
   delegate_to: "{{ delegated_host }}"
-  when: inventory_hostname != delegated_host
+  when: delegation and inventory_hostname != delegated_host
 
 - name: unarchieve notebook tar ball
   unarchive: src={{ package_dir }}/notebook-{{ notebook_version }}-bin.tar.gz dest={{ install_dir }} copy=no

@@ -1,0 +1,28 @@
+---
+
+- name: copy notebook tpcds jars by {{ delegated_host }}
+  synchronize: src={{ package_dir }}/{{ item }} dest={{ install_dir }}/notebook/jars
+  delegate_to: "{{ delegated_host }}"
+  when: delegation and inventory_hostname != delegated_host
+  with_items:
+    - spark-sql-perf_2.11-0.5.0-SNAPSHOT.jar
+    - scala-logging-slf4j_2.11-2.1.2.jar
+    - scala-logging-api_2.11-2.1.2.jar
+  tags:
+    - tpcds-notebook-install
+
+- name: copy notebook tpcds jars from local
+  command: cp {{ package_dir }}/{{ item }} {{ install_dir }}/notebook/jars
+  when: inventory_hostname == delegated_host
+  with_items:
+    - spark-sql-perf_2.11-0.5.0-SNAPSHOT.jar
+    - scala-logging-slf4j_2.11-2.1.2.jar
+    - scala-logging-api_2.11-2.1.2.jar
+  tags:
+    - tpcds-notebook-install
+
+- name: add spark.jars configuration to spark-default.conf
+  lineinfile: path={{ install_dir }}/spark/conf/spark-defaults.conf state=present
+    line="spark.jars  \t  {{ install_dir }}/notebook/jars/spark-sql-perf_2.11-0.5.0-SNAPSHOT.jar,{{ install_dir }}/notebook/jars/scala-logging-slf4j_2.11-2.1.2.jar,{{ install_dir }}/notebook/jars/scala-logging-api_2.11-2.1.2.jar"
+
+

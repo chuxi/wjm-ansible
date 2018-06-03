@@ -25,3 +25,11 @@
     - cmake
   tags:
     - cmake
+
+- name: make tpcds
+  hosts: tpcds
+  remote_user: "{{ user }}"
+  roles:
+    - tpcds
+  tags:
+    - tpcds
